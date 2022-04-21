@@ -100,12 +100,24 @@ const switchcacheSelect=(event)=>[
   return requests.value *selected.value* selectedsecond.value 
 })
 const totalPricebasedonRequests=computed(()=>{
-   return  requests.value *selected.value* selectedsecond.value  * 0.0000035
+  let totalReqwithoutCache=requests.value *selected.value* selectedsecond.value;
+  let totalRequestsminus333=totalReqwithoutCache-333000000
+  if(totalReqwithoutCache>333000000){
+        return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028 
+  }
+   
  })
 const totalCacheCost=computed(()=>{
    return selectedcache.value * 730
 })
 const totalPricewithChache=computed(()=>{
-  return requests.value *selected.value* selectedsecond.value  * 0.0000035 + selectedcache.value * 730
+  let totalReq=requests.value *selected.value* selectedsecond.value;
+  let totalRequestsminus333=totalReq-333000000
+  if(totalReq>333000000){
+        return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028 + selectedcache.value * 730
+  }else{
+     return  totalReq * 0.0000035 + selectedcache.value * 730
+  }
+  // return requests.value *selected.value* selectedsecond.value  * 0.0000035 + selectedcache.value * 730
 })
 </script>
