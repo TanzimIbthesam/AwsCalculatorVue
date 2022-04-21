@@ -5,6 +5,7 @@
 
 
   <div class="container mx-auto ">
+    <div class="text-xl font-bold">Rest Api</div>
     <p class="text-md text-gray-500 font-serif pt-">
       Select the units, number, and frequency for HTTP API requests based on expected volume. The calculations below exclude free tier discounts.</p>
       <p>HTTP API requests units</p>
@@ -14,15 +15,12 @@
       selectoption
       form-select form-select-lg 
       mt-3 mb-3
-      focus:outline-non
-      
-      
-      
-      " @change="switchSelect($event)">
-        <option value="">Choose</option>
-        <option value=1>exact number</option>
-        <option value=1000>thousands</option>
-        <option value=1000000>millions</option>
+      focus:outline-non" 
+      @change="switchSelect($event)">
+      <option value="">Choose</option>
+      <option value=1>exact number</option>
+      <option value=1000>thousands</option>
+      <option value=1000000>millions</option>
         
       </select>
       <div class="flex space-x-2 mt-3">
@@ -64,7 +62,7 @@
         <p>{{threethreekk}} requests * 0.0000035 USD= 1165.50 USD</p>
         <p>667000000 requests x 0.0000028 USD= 1867.60 USD</p>
         <p>19000000000 requests x 0.0000023800 USD = 45220.00 USD</p>
-        <p>{{ totalRequests - trillionk}} requests x 0.0000015100 USD={{ (totalRequests - trillionk) * 0.0000015100}}  </p>
+        <p>{{ totalRequests - trillionk}} requests x 0.0000015100 USD={{ (totalRequests - trillionk) * 0.0000015100}}</p>
      
         <p class="font-bold">Tiered price total for REST API requests-{{totalPricebasedonRequests}}USD</p>
        </div>
@@ -104,7 +102,7 @@ const billionk=ref(1000000000);
 const trillionk=ref(20000000000)
 
 let requests=ref('');
-let age=ref(17);
+
 const switchSelect=(event)=>{
   console.log("Event");
   selected.value=event.target.value
@@ -166,8 +164,8 @@ const totalPricewithChache=computed(()=>{
      + totalReqminustrillionwithCache * 0.0000015100 +selectedcache.value * 730
    }else if(totalReqwithcache>1000000000){
         return 333000000 * 0.0000035  + 667000000 * 0.0000028 +  totalReqminusbillionwithcache *  0.0000023800 + selectedcache.value * 730
-  }else if(totalReqwithcache>333000000 && totalReqwithoutCache<1000000000){
-             return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028+selectedcache.value * 730
+  }else if(totalReqwithcache>333000000 && totalReqwithcache<1000000000){
+             return 333000000 * 0.0000035  + totalRequestsminus333withcache * 0.0000028+selectedcache.value * 730
   }else {
      return requests.value *selected.value* selectedsecond.value  * 0.0000035 + selectedcache.value * 730
   }
