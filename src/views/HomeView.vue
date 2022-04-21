@@ -64,7 +64,8 @@
        <div v-if="selectedcache">
            <p>{{selectedcache}} USD per hour * 730 hours in a month={{totalCacheCost}} USD for cache memory</p>
        <p>Dedicated Cache memory total price-{{totalCacheCost}}</p>
-        <p>Total Price with Cache-{{totalPricewithChache}}</p>
+       <p>{{totalPricewithChache}} USD + {{totalCacheCost}}={{totalPricewithChache}} USD</p>
+        <p class="font-bold">REST API cost (monthly):-{{totalPricewithChache}}</p>
        </div>
       
     </div>
@@ -74,6 +75,7 @@ import {ref,computed} from 'vue'
 const selected=ref(1);
 const selectedsecond=ref('');
 const selectedcache=ref('');
+
 let requests=ref('');
 let age=ref(17);
 const switchSelect=(event)=>{
@@ -89,9 +91,9 @@ const switchSelectSecond=(event)=>{
   console.log(selectedsecond);
   
 }
-const switchcacheSelect=(event)=>[
+const switchcacheSelect=(event)=>{
   selectedcache.value=event.target.value
-]
+}
 // const totalRequestsperSecondnAMonth= computed (()=>{
 //   return requests.value * selected.value * 60 * 60 * 730
 // })
@@ -102,8 +104,16 @@ const switchcacheSelect=(event)=>[
 const totalPricebasedonRequests=computed(()=>{
   let totalReqwithoutCache=requests.value *selected.value* selectedsecond.value;
   let totalRequestsminus333=totalReqwithoutCache-333000000
-  if(totalReqwithoutCache>333000000){
-        return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028 
+   let totalReqminusbillion=totalReqwithoutCache-1000000000
+   let totalReqminustrillion=totalReqwithoutCache-20000000000
+   if(totalReqwithoutCache>20000000000){
+     return 333000000 * 0.0000035  + 667000000 * 0.0000028 + 19000000000 * 0.0000023800 + totalReqminustrillion * 0.0000015100 
+   }else if(totalReqwithoutCache>1000000000){
+        return 333000000 * 0.0000035  + 667000000 * 0.0000028 + totalReqminusbillion *  0.0000023800
+  }else if(totalReqwithoutCache>333000000 && totalReqwithoutCache<1000000000){
+             return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028
+  }else{
+    return totalReqwithoutCache * 0.0000035
   }
    
  })
@@ -111,13 +121,24 @@ const totalCacheCost=computed(()=>{
    return selectedcache.value * 730
 })
 const totalPricewithChache=computed(()=>{
-  let totalReq=requests.value *selected.value* selectedsecond.value;
-  let totalRequestsminus333=totalReq-333000000
-  if(totalReq>333000000){
-        return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028 + selectedcache.value * 730
-  }else{
-     return  totalReq * 0.0000035 + selectedcache.value * 730
+  let totalReqwithcache=requests.value *selected.value* selectedsecond.value;
+  let totalRequestsminus333withcache=totalReqwithcache-333000000
+  let totalReqminusbillionwithcache=totalReqwithcache-1000000000
+     let totalReqminustrillionwithCache=totalReqwithcache-20000000000
+  // if(totalReq>333000000){
+  //       return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028 + selectedcache.value * 730
+  // }else{
+  //    return  totalReq * 0.0000035 + selectedcache.value * 730
+  // }
+  if(totalReqwithcache>20000000000){
+     return 333000000 * 0.0000035  + 667000000 * 0.0000028 + 19000000000 * 0.0000023800 
+     + totalReqminustrillionwithCache * 0.0000015100 +selectedcache.value * 730
+   }else if(totalReqwithcache>1000000000){
+        return 333000000 * 0.0000035  + 667000000 * 0.0000028 +  totalReqminusbillionwithcache *  0.0000023800 + selectedcache.value * 730
+  }else if(totalReqwithcache>333000000 && totalReqwithoutCache<1000000000){
+             return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028+selectedcache.value * 730
   }
+  
   // return requests.value *selected.value* selectedsecond.value  * 0.0000035 + selectedcache.value * 730
 })
 </script>
