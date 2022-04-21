@@ -58,14 +58,38 @@
    
       Unit conversion for Api requests 
        Requests: {{requests}} per second * (60 seconds in a minute x 60 minutes in an hour x 730 hours in a month)-{{totalRequests}}
-       <p class="text-xs">{{totalRequests}} requests * {{selected}} unit multiplier={{totalRequests}}</p>
+       <p class="text-xs">{{totalRequests}} requests * {{selected}} unit multiplier={{totalRequests}} total Rest Api requests</p>
        <p>Tiered price for: {{totalRequests}} requests </p>
-       <p>2628000 requests x 0.0000035000 USD ={{totalPricebasedonRequests}}USD</p>
+       <div v-if="totalRequests>trillionk">
+        <p>{{threethreekk}} requests * 0.0000035 USD= 1165.50 USD</p>
+        <p>667000000 requests x 0.0000028 USD= 1867.60 USD</p>
+        <p>19000000000 requests x 0.0000023800 USD = 45220.00 USD</p>
+        <p>{{ totalRequests - trillionk}} requests x 0.0000015100 USD={{ (totalRequests - trillionk) * 0.0000015100}}  </p>
+     
+        <p class="font-bold">Tiered price total for REST API requests-{{totalPricebasedonRequests}}USD</p>
+       </div>
+       <div v-else-if="totalRequests>billionk">
+        <p>{{threethreekk}} requests x 0.0000035 USD= 1165.50 USD</p>
+        <p>667000000 requests x 0.0000028 USD= 1867.60 USD</p>
+        <p>{{ totalRequests-billionk}} requests x 0.0000023800 USD={{(totalRequests-billionk) * 0.0000023800}}</p>
+        <p class="font-bold">Tiered price total for REST API requests-{{totalPricebasedonRequests}}USD</p>
+       </div>
+       <div v-else-if="totalRequests>threethreekk">
+         <p>{{threethreekk}} requests x 0.0000035 USD= 1165.50 USD</p>
+         <p>{{totalRequests-threethreekk}} requests x 0.0000028 USD={{(totalRequests-threethreekk) * 0.0000028}} USD</p>
+         <p class="font-bold">Tiered price total for REST API requests-{{totalPricebasedonRequests}}USD</p>
+       </div>
+       <div v-else>
+           <p>{{totalRequests}} requests x 0.0000028 USD={{totalRequests * 0.0000035}}</p>
+           <p class="font-bold">Tiered price total for REST API requests-{{totalPricebasedonRequests}}USD</p>
+       </div>
+       
+       <!-- <p>2628000 requests x 0.0000035000 USD ={{totalPricebasedonRequests}}USD</p> -->
        <div v-if="selectedcache">
            <p>{{selectedcache}} USD per hour * 730 hours in a month={{totalCacheCost}} USD for cache memory</p>
        <p>Dedicated Cache memory total price-{{totalCacheCost}}</p>
        <p>{{totalPricewithChache}} USD + {{totalCacheCost}}={{totalPricewithChache}} USD</p>
-        <p class="font-bold">REST API cost (monthly):-{{totalPricewithChache}}</p>
+        <p class="font-bold">REST API cost (monthly):-{{totalPricewithChache}} USD</p>
        </div>
       
     </div>
@@ -75,6 +99,9 @@ import {ref,computed} from 'vue'
 const selected=ref(1);
 const selectedsecond=ref('');
 const selectedcache=ref('');
+const threethreekk=ref(333000000);
+const billionk=ref(1000000000);
+const trillionk=ref(20000000000)
 
 let requests=ref('');
 let age=ref(17);
@@ -84,6 +111,7 @@ const switchSelect=(event)=>{
   selectedsecond.value=event.target.value
   
 }
+
 const switchSelectSecond=(event)=>{
   console.log("Event Second");
   
@@ -101,11 +129,14 @@ const switchcacheSelect=(event)=>{
  const totalRequests= computed (()=>{
   return requests.value *selected.value* selectedsecond.value 
 })
+ const totalRequestsminus= computed (()=>{
+  return requests.value *selected.value* selectedsecond.value 
+})
 const totalPricebasedonRequests=computed(()=>{
   let totalReqwithoutCache=requests.value *selected.value* selectedsecond.value;
-  let totalRequestsminus333=totalReqwithoutCache-333000000
-   let totalReqminusbillion=totalReqwithoutCache-1000000000
-   let totalReqminustrillion=totalReqwithoutCache-20000000000
+  let totalRequestsminus333=totalReqwithoutCache-threethreekk.value
+   let totalReqminusbillion=totalReqwithoutCache-billionk.value
+   let totalReqminustrillion=totalReqwithoutCache-trillionk.value
    if(totalReqwithoutCache>20000000000){
      return 333000000 * 0.0000035  + 667000000 * 0.0000028 + 19000000000 * 0.0000023800 + totalReqminustrillion * 0.0000015100 
    }else if(totalReqwithoutCache>1000000000){
@@ -137,6 +168,8 @@ const totalPricewithChache=computed(()=>{
         return 333000000 * 0.0000035  + 667000000 * 0.0000028 +  totalReqminusbillionwithcache *  0.0000023800 + selectedcache.value * 730
   }else if(totalReqwithcache>333000000 && totalReqwithoutCache<1000000000){
              return 333000000 * 0.0000035  + totalRequestsminus333 * 0.0000028+selectedcache.value * 730
+  }else {
+     return requests.value *selected.value* selectedsecond.value  * 0.0000035 + selectedcache.value * 730
   }
   
   // return requests.value *selected.value* selectedsecond.value  * 0.0000035 + selectedcache.value * 730
